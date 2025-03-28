@@ -1,35 +1,71 @@
-use std::net::{TcpStream};
+use std::net::TcpStream;
 use std::io::{Read, Write};
 use std::str::from_utf8;
+use std::io;
 
 fn main() -> std::io::Result<()> {
-    let server_ip = "nsl2.cau.ac.kr";
-    let server_port = "39999";
+    // let server_ip = "nsl2.cau.ac.kr";
+    let server_ip = "127.0.0.1";
+    let server_port = "11406";
     let server_addr = format!("{}:{}", server_ip, server_port);
 
+    // Create TCP connection to server
     let mut stream = TcpStream::connect(server_addr.clone())?;
 
-    println!("Connected to server at {} from client at {}", 
-                stream.peer_addr().unwrap().to_string(),
-                stream.local_addr().unwrap().to_string());
+    println!(
+        "Connected to server at {} from client at {}",
+        stream.peer_addr().unwrap().to_string(),
+        stream.local_addr().unwrap().to_string()
+    );
 
-    let mut input = String::from("");
+    loop {
+        // Print options
+        println!("\n--- Menu ---");
+        println!("1) Convert text to UPPER-case letters");
+        println!("2) Ask how long the server has been running (HH:MM:SS)");
+        println!("3) Ask what the IP and port of the client are");
+        println!("4) Ask how many requests the server has handled so far");
+        println!("5) Exit client program");
 
-    println!("Input lowercase sentence: ");
-    std::io::stdin().read_line(&mut input)?;
-    let msg = input.trim_end();
+        println!("Select option (1~5): ");
 
-    stream.write(msg.as_bytes())?;
-    //println!("Sent ({}) : {msg}", msg.len());
+        // Get option from user
+        let mut choice = String::new();
+        io::stdin().read_line(&mut choice)?;
+        let choice = choice.trim();
 
-    let mut buffer = [0; 512];
+        let msg_to_send = match choice {
+            "1" => {
+                print!("Enter text to convert to UPPER-case: ");
+                io::Write::flush(&mut io::stdout())?;
+                let mut input = String::new();
+                io::stdin().read_line(&mut input)?;
+                format!("OPT1:{}", input.trim_end())
+            }
+            "2" => "OPT2".to_string(),
+            "3" => "OPT3".to_string(),
+            "4" => "OPT4".to_string(),
+            "5" => {
+                println!("Exiting program.");
+                break;
+            }
+            // When get wrong option (not in 1~5)
+            _ => {
+                println!("Invalid option. Try again.");
+                continue;
+            }
+        };
 
-    let _size = stream.read(&mut buffer)?;
+        // Send message to server
+        // OPT1:{text} or OPT2, OPT3, OPT4
+        stream.write_all(msg_to_send.as_bytes())?;
 
-    let text2 = from_utf8(&buffer).unwrap();
-    //println!("Reply({_size}) : {text2}");
-    println!("Reply from server: {}", text2);
+        // Get response from the server
+        let mut buffer = [0; 512];
+        let size = stream.read(&mut buffer)?;
+        let reply = from_utf8(&buffer[..size]).unwrap_or("[Invalid UTF-8 reply]");
+        println!("Response from server: {}", reply);
+    }
 
     Ok(())
 }
-
