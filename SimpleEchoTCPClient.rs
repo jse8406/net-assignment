@@ -1,3 +1,4 @@
+// SEUNG EON JIN 20201406
 use std::net::TcpStream;
 use std::io::{Read, Write};
 use std::str::from_utf8;
@@ -64,7 +65,7 @@ fn main() -> std::io::Result<()> {
         let mut buffer = [0; 512];
         let size = stream.read(&mut buffer)?;
         let reply = from_utf8(&buffer[..size]).unwrap_or("[Invalid UTF-8 reply]");
-        println!("Response from server: {}", reply);
+        println!("Reply from server: {}", reply);
     }
 
     Ok(())

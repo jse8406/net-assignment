@@ -46,11 +46,11 @@ fn main() -> std::io::Result<()> {
                 content.to_uppercase()
             } else if msg == "OPT2" {
                 let elapsed = start_time.elapsed();
-                format!("{:02}:{:02}:{:02}", elapsed.as_secs() / 3600, (elapsed.as_secs() / 60) % 60, elapsed.as_secs() % 60)
+                format!("run time = {02}:{:02}:{:02}", elapsed.as_secs() / 3600, (elapsed.as_secs() / 60) % 60, elapsed.as_secs() % 60)
             } else if msg == "OPT3" {
-                format!("Your IP: {}, Port: {}", client_addr.ip(), client_addr.port())
+                format!("client IP = {}, port = {}", client_addr.ip(), client_addr.port())
             } else if msg == "OPT4" {
-                format!("Total requests so far: {}", request_count)
+                format!("requests served = {}", request_count)
             } else {
                 "Invalid command.".to_string()
             };
