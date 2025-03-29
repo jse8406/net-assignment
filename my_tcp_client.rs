@@ -3,11 +3,11 @@ use std::net::TcpStream;
 use std::io::{Read, Write};
 use std::str::from_utf8;
 use std::io;
+use std::time::Duration;
 use std::time::Instant;
 
 fn main() -> std::io::Result<()> {
-    // let server_ip = "nsl2.cau.ac.kr";
-    let server_ip = "127.0.0.1";
+    let server_ip = "nsl5.cau.ac.kr";
     let server_port = "11406";
     let server_addr = format!("{}:{}", server_ip, server_port);
 
@@ -19,6 +19,7 @@ fn main() -> std::io::Result<()> {
         stream.peer_addr().unwrap().to_string(),
         stream.local_addr().unwrap().to_string()
     );
+    stream.set_read_timeout(Some(Duration::from_secs(5)))?;
 
     loop {
         // Print options
@@ -39,15 +40,20 @@ fn main() -> std::io::Result<()> {
         // Here, the message header is OPT + # of option. But in option 1, the message contains the text which will be converted to upper case and others have the only message headers.
         let msg_to_send = match choice {
             "1" => {
-                // option 1, message is header + text
+                // Option 1, message is header + text
                 loop {
                     print!("Enter text to convert to UPPER-case: ");
                     io::Write::flush(&mut io::stdout())?;
                     let mut input = String::new();
-                    io::stdin().read_line(&mut input)?;
+                    // Handling for EOF input
+                    if io::stdin().read_line(&mut input)? == 0 {
+                        println!("EOF : invalid input...");
+                        continue;
+                    }
+                    
                     let trimmed = input.trim_end();
 
-                    // check if the text is only composed with english or number
+                    // Check if the text is only composed with english or number
                     if trimmed.chars().all(|c| c.is_ascii_alphabetic() || c.is_ascii_whitespace() || c.is_ascii_digit()) {
                         break format!("OPT1{}", trimmed);
                     } else {
@@ -55,11 +61,11 @@ fn main() -> std::io::Result<()> {
                     }
                 }
             }
-            // others message is only header
+            // Others message is only header
             "2" => "OPT2".to_string(),
             "3" => "OPT3".to_string(),
             "4" => "OPT4".to_string(),
-            // exit program => repeat the menu until getting command option 5
+            // Exit program => repeat the menu until getting command option 5
             "5" => {
                 println!("Exiting program.");
                 break;
@@ -72,7 +78,7 @@ fn main() -> std::io::Result<()> {
         };
 
         
-        // check the time before sending the command
+        // Check the time before sending the command
         let start_time = Instant::now();
         
         // Send message to server
@@ -81,11 +87,29 @@ fn main() -> std::io::Result<()> {
 
         // Get response from the server
         let mut buffer = [0; 512];
-        let size = stream.read(&mut buffer)?;
+        // Handling exception for read nothing from the server(communication disconnected) and time out
+        let size = match stream.read(&mut buffer) {
+            Ok(0) => {
+                println!("Server closed the connection.");
+                break;
+            }
+            Ok(n) => n,
+            Err(ref e) if e.kind() == std::io::ErrorKind::WouldBlock => {
+                println!("Read timed out after 5 seconds.");
+                break;
+            }
+            Err(e) => {
+                eprintln!("Read failed: {}", e);
+                break;
+            }
+        };
+        // Prevent failure of utf-8 decoding
         let reply = from_utf8(&buffer[..size]).unwrap_or("[Invalid UTF-8 reply]");
 
-        // after receiving the reply
+        // Check RTT after receiving the reply
         let elapsed = start_time.elapsed();
+
+        // Print the reply from the server and RTT
         println!("Reply from server: {}", reply);
         println!("RTT = {:.3} ms", elapsed.as_secs_f64() * 1000.0); // 1s = 1000ms
     }
