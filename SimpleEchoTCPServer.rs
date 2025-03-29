@@ -1,3 +1,4 @@
+// SEUNG EON JIN 20201406
 use std::net::{TcpListener, TcpStream};
 use std::io::{Read, Write};
 use std::str::from_utf8;
@@ -52,7 +53,8 @@ fn main() -> std::io::Result<()> {
             } else if msg == "OPT4" {
                 format!("requests served = {}", request_count)
             } else {
-                "Invalid command.".to_string()
+                // exceoption handling for invaild message
+                "Invalid message.".to_string()
             };
 
             stream.write_all(reply.as_bytes())?;
