@@ -25,7 +25,7 @@ fn main() -> std::io::Result<()> {
         // Print options
         println!("\n--- Menu ---");
         println!("1) Convert text to UPPER-case letters");
-        println!("2) Ask how long the server has been running (HH:MM:SS)");
+        println!("2) Ask how long the server has been running for since server started (HH:MM:SS)");
         println!("3) Ask what the IP and port of the client are");
         println!("4) Ask how many requests the server has handled so far");
         println!("5) Exit client program");
