@@ -143,3 +143,12 @@ cargo run 1 Alice
 ### 호스트 설정
 - 기본적으로 localhost(127.0.0.1)로 설정 가능
 - 필요 시 원격 호스트(nsl5.cau.ac.kr 등)로 변경 가능
+
+# Screenshots for connecting and feature \list  
+
+  유저 4명 연결
+  <img width="1917" height="1014" alt="image" src="https://github.com/user-attachments/assets/5c4f5e02-b36f-42d4-af58-201b7687424f" />  
+  \list 기능
+  <img width="1909" height="1013" alt="image" src="https://github.com/user-attachments/assets/636b60db-17f2-4266-8481-62e752ed7649" />
+
+
