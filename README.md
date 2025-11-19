@@ -99,4 +99,45 @@ cargo run
 # Screenshots for feature 3 and 4  
 
 <img width="1909" height="1008" alt="image" src="https://github.com/user-attachments/assets/a94f5d99-c3e0-4a14-9d23-b3efef672842" />
-<img width="1908" height="1000" alt="image" src="https://github.com/user-attachments/assets/2aca8724-e8ec-48a4-a1d4-78b243be3bdc" />
+<img width="1908" height="1000" alt="image" src="https://github.com/user-attachments/assets/2aca8724-e8ec-48a4-9d23-b3efef672842" />
+
+---
+
+## 과제 P2P
+
+### P2P 채팅 애플리케이션 개요
+Rust를 이용해 P2P(Peer-to-Peer) 기반 채팅 시스템을 구현하며, 노드 간 직접 통신과 멀티스레딩을 학습하는 과제입니다.
+
+### 주요 기능
+
+#### 1. 노드 기반 채팅
+- 각 노드는 고유한 ID(1-4)를 가지며, 하드코딩된 피어 주소로 연결됩니다.
+- 노드 ID와 닉네임(16자 이하)을 인자로 받아 실행합니다.
+
+#### 2. 명령어 지원
+- `\help`: 사용 가능한 명령어 목록 출력
+- `\list`: 현재 연결된 피어 목록 표시
+- `\quit`: 모든 피어에게 연결 종료 메시지를 보내고 프로그램 종료
+- 일반 메시지: 입력한 텍스트를 모든 연결된 피어에게 브로드캐스트
+
+#### 3. 멀티스레딩
+- 각 피어 연결을 별도의 스레드로 처리하여 동시 채팅 가능
+- 비동기 I/O를 위해 Tokio 크레이트 사용
+
+#### 4. 연결 관리
+- 피어 주소는 상수로 정의되어 있으며, localhost 또는 원격 호스트로 설정 가능
+- 연결 실패 시 재시도 로직 포함
+
+### 실행 방법
+```bash
+cd p2p_chat
+cargo run <node_id> <nickname>
+```
+예시:
+```bash
+cargo run 1 Alice
+```
+
+### 호스트 설정
+- 기본적으로 localhost(127.0.0.1)로 설정 가능
+- 필요 시 원격 호스트(nsl5.cau.ac.kr 등)로 변경 가능

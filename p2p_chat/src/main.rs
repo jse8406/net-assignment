@@ -17,12 +17,17 @@ use tokio::time::interval;
 // XXXX with last 4 digits of student ID
 const XXXX: u16 = 1406;
 
+// host vars
+const HOST_LOCAL: &str = "127.0.0.1";
+// const HOST_A: &str = "nsl5.cau.ac.kr";
+// const HOST_B: &str = "nsl2.cau.ac.kr";
+
 // Hardcoded peer addresses (XXXX with student ID digits)
 const PEER_ADDRESSES: [(u8, &str, u16); 4] = [
-    (1, "nsl5.cau.ac.kr", 2*10000 + XXXX),
-    (2, "nsl5.cau.ac.kr", 3*10000 + XXXX),
-    (3, "nsl2.cau.ac.kr", 4*10000 + XXXX),
-    (4, "nsl2.cau.ac.kr", 5*10000 + XXXX),
+    (1, HOST_LOCAL, 2*10000 + XXXX),
+    (2, HOST_LOCAL, 3*10000 + XXXX),
+    (3, HOST_LOCAL, 4*10000 + XXXX),
+    (4, HOST_LOCAL, 5*10000 + XXXX),
 ];
 
 const K: usize = 2; // Maximum number of connections per direction
