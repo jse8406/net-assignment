@@ -99,7 +99,7 @@ cargo run
 # Screenshots for feature 3 and 4  
 
 <img width="1909" height="1008" alt="image" src="https://github.com/user-attachments/assets/a94f5d99-c3e0-4a14-9d23-b3efef672842" />
-<img width="1908" height="1000" alt="image" src="https://github.com/user-attachments/assets/2aca8724-e8ec-48a4-9d23-b3efef672842" />
+<img width="1908" height="1000" alt="image" src="https://github.com/user-attachments/assets/2aca8724-e8ec-48a4-a1d4-78b243be3bdc" />
 
 ---
 
@@ -127,6 +127,8 @@ Rust를 이용해 P2P(Peer-to-Peer) 기반 채팅 시스템을 구현하며, 노
 #### 4. 연결 관리
 - 피어 주소는 상수로 정의되어 있으며, localhost 또는 원격 호스트로 설정 가능
 - 연결 실패 시 재시도 로직 포함
+- 각 노드당 최대 incoming 및 outgoing 연결 수는 3개로 제한
+- 연결된 피어 목록을 각 노드가 자체 리스트에 저장하여 관리
 
 ### 실행 방법
 ```bash
